@@ -20,10 +20,7 @@ def add_items(inventory, items):
     """
 
     for item in items:
-        if inventory.get(item,'none') == 'none':
-            inventory[item] = 1
-        else:
-            inventory[item] += 1
+        inventory[item] = inventory.get(item, 0) + 1
     return inventory    
 
 
@@ -36,7 +33,7 @@ def decrement_items(inventory, items):
     """
 
     for item in items:
-        if inventory.get(item,'none') != 'none' and inventory.get(item) != 0:
+        if inventory.get(item,0) > 0:
             inventory[item] -= 1 
     return inventory
 
@@ -59,8 +56,5 @@ def list_inventory(inventory):
     :return: list of tuples - list of key, value pairs from the inventory dictionary.
     """
 
-    li = []
-    for key, value in inventory.items():
-        if value > 0:
-            li.append((key, value))
-    return li
+    output = [(key, value) for key, value in inventory.items() if value > 0]
+    return output
