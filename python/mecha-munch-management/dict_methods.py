@@ -9,8 +9,9 @@ def add_item(current_cart, items_to_add):
     :return: dict - the updated user cart dictionary.
     """
 
-    pass
-
+    for item in items_to_add:
+        current_cart[item] = current_cart.setdefault(item,0) + 1
+    return current_cart
 
 def read_notes(notes):
     """Create user cart from an iterable notes entry.
@@ -19,9 +20,8 @@ def read_notes(notes):
     :return: dict - a user shopping cart dictionary.
     """
 
-    pass
-
-
+    return dict.fromkeys(notes,1)
+    
 def update_recipes(ideas, recipe_updates):
     """Update the recipe ideas dictionary.
 
@@ -30,8 +30,8 @@ def update_recipes(ideas, recipe_updates):
     :return: dict - updated "recipe ideas" dict.
     """
 
-    pass
-
+    ideas |= recipe_updates
+    return ideas
 
 def sort_entries(cart):
     """Sort a users shopping cart in alphabetically order.
@@ -40,8 +40,7 @@ def sort_entries(cart):
     :return: dict - users shopping cart sorted in alphabetical order.
     """
 
-    pass
-
+    return dict(sorted(cart.items()))
 
 def send_to_store(cart, aisle_mapping):
     """Combine users order to aisle and refrigeration information.
@@ -51,8 +50,10 @@ def send_to_store(cart, aisle_mapping):
     :return: dict - fulfillment dictionary ready to send to store.
     """
 
-    pass
-
+    fulfillment_cart = {}
+    for product in cart:
+        fulfillment_cart[product] = [cart[product]] + aisle_mapping[product]
+    return dict(sorted(fulfillment_cart.items(),reverse=True))
 
 def update_store_inventory(fulfillment_cart, store_inventory):
     """Update store inventory levels with user order.
@@ -62,4 +63,11 @@ def update_store_inventory(fulfillment_cart, store_inventory):
     :return: dict - store_inventory updated.
     """
 
-    pass
+    updated_inventory = {}
+    for product in fulfillment_cart:
+        updated_inventory[product] = [store_inventory[product][0] - fulfillment_cart[product][0]] + store_inventory[product][1:]
+        if updated_inventory[product][0] <= 0:
+            updated_inventory[product] = ['Out of Stock'] + store_inventory[product][1:]
+
+    updated_inventory = store_inventory | updated_inventory
+    return updated_inventory
