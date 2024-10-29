@@ -29,8 +29,7 @@ def add_missing_stops(route_dict, **stops):
     :return: dict - updated route dictionary.
     """
 
-    new_stops = [stop for stop in stops.values()]
-    stop_dict = {"stops": new_stops}
+    stop_dict = {"stops": list(stops.values())}
     return {**route_dict, **stop_dict}
 
 
